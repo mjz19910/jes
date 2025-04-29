@@ -4,7 +4,7 @@ from jes_ui import UI
 
 def init():
 	sim = Sim(
-		_c_count=1 * 2, _stabilization_time=int(50 * 2), _trial_time=int(75 * 2),
+		_c_count=2 * 2, _stabilization_time=int(50 * 3), _trial_time=int(75 * 3),
 		_beat_time=20, _beat_fade_time=5, _c_dim=[4,4],
 		_beats_per_cycle=3, _node_coor_count=4, # x_position, y_position, x_velocity, y_velocity
 		_y_clips=[-10000000,0], _ground_friction_coef=25,
@@ -12,7 +12,7 @@ def init():
 		_typical_friction_coef=0.8, _muscle_coef=0.08,
 		_traits_per_box=3, # desired width, desired height, rigidity
 		_traits_extra=1, # heartbeat (time)
-		_mutation_rate=0.07 * 1, _big_mutation_rate=0.025 * 1,
+		_mutation_rate=0.07 * 2, _big_mutation_rate=0.025 * 1,
 		_UNITS_PER_METER=0.05
 	)
 

@@ -28,14 +28,14 @@ class Sim:
         self.calming_friction_coef = _calming_friction_coef
         self.typical_friction_coef = _typical_friction_coef
         self.muscle_coef = _muscle_coef
-        
+
         self.traits_per_box = _traits_per_box
         self.traits_extra = _traits_extra
         self.trait_count = self.CW*self.CH*self.beats_per_cycle*self.traits_per_box+self.traits_extra
-        
+
         self.mutation_rate = _mutation_rate
         self.big_mutation_rate = _big_mutation_rate
-        
+
         self.S_VISIBLE = 0.05 #what proportion of the population does a species need to appear on the SAC graph?
         self.S_NOTABLE = 0.10 #what proportion of the population does a species need to appear in the genealogy?
         self.HUNDRED = 100 # change this if you want to change the resolution of the percentile-tracking
@@ -48,34 +48,34 @@ class Sim:
         self.prominent_species = []
         self.ui = None
         self.last_gen_run_time = -1
-        
+
     def initializeUniverse(self):
         self.creatures = [[None]*self.c_count]
         for c in range(self.c_count):
             self.creatures[0][c] = self.createNewCreature(c)
             self.species_info.append(SpeciesInfo(self,self.creatures[0][c], None))
-            
+
         # We want to make sure that all creatures, even in their
         # initial state, are in calm equilibrium. They shouldn't
         # be holding onto potential energy (e.g. compressed springs)
         self.getCalmStates(0,0,self.c_count,self.stabilization_time,True) #Calm the creatures down so no potential energy is stored
-        
+
         for c in range(self.c_count):
             for i in range(2):
                 self.creatures[0][c].icons[i] = self.creatures[0][c].drawIcon(self.ui.ICON_DIM[i], self.ui.MOSAIC_COLOR, self.beat_fade_time)
-            
+
         self.ui.drawCreatureMosaic(0)
-        
+
     def createNewCreature(self, idNumber):
         dna = np.clip(np.random.normal(0.0, 1.0, self.trait_count),-3,3)
         return Creature(dna, idNumber, -1, self, self.ui)
-        
+
     def getCalmStates(self, gen, startIndex, endIndex, frameCount, calmingRun):
         param = self.simulateImport(gen, startIndex, endIndex, False)
         nodeCoor, muscles, _ = self.simulateRun(param, frameCount, True)
         for c in range(self.c_count):
             self.creatures[gen][c].saveCalmState(nodeCoor[c])
-            
+
     def getStartingNodeCoor(self, gen, startIndex, endIndex, fromCalmState):
         COUNT = endIndex-startIndex
         n = np.zeros((COUNT,self.CH+1,self.CW+1,self.node_coor_count))
@@ -109,7 +109,7 @@ class Sim:
 
     def frameToBeat(self, f):
         return (f//self.beat_time)%self.beats_per_cycle
-        
+
     def frameToBeatFade(self, f):
         prog = f%self.beat_time
         return min(prog/self.beat_fade_time,1)
@@ -119,11 +119,11 @@ class Sim:
         friction = self.calming_friction_coef if calmingRun else self.typical_friction_coef
         CEILING_Y = self.y_clips[0]
         FLOOR_Y = self.y_clips[1]
-        
+
         for f in range(frameCount):
             currentFrame = startCurrentFrame+f
             beat = 0
-            
+
             if not calmingRun:
                 beat = self.frameToBeat(currentFrame)
                 nodeCoor[:,:,:,3] += self.gravity_acceleration_coef
@@ -131,20 +131,20 @@ class Sim:
             applyMuscles(nodeCoor,muscles[:,:,:,beat,:],self.muscle_coef)
             nodeCoor[:,:,:,2:4] *= friction
             nodeCoor[:,:,:,0:2] += nodeCoor[:,:,:,2:4]    # all node's x and y coordinates are adjusted by velocity_x and velocity_y
-            
+
             if not calmingRun:    # dealing with collision with the ground.
                 nodesTouchingGround = np.ma.masked_where(nodeCoor[:,:,:,1] >= FLOOR_Y, nodeCoor[:,:,:,1])
                 m = nodesTouchingGround.mask.astype(float) # mask that only contains 1's where nodes touch the floor
                 pressure = nodeCoor[:,:,:,1]-FLOOR_Y
                 groundFrictionMultiplier = 0.5**(m*pressure*self.ground_friction_coef)
-                
+
                 nodeCoor[:,:,:,1] = np.clip(nodeCoor[:,:,:,1], CEILING_Y, FLOOR_Y) # clip nodes below the ground back to ground level
                 nodeCoor[:,:,:,2] *= groundFrictionMultiplier # any nodes touching the ground must be slowed down by ground friction.
-        
+
         if calmingRun: # If it's a calming run, then take the average location of all nodes to center it at the origin.
             nodeCoor[:,:,:,0] -= np.mean(nodeCoor[:,:,:,0], axis=(1,2), keepdims=True)
         return nodeCoor, muscles, startCurrentFrame+frameCount
-        
+
     def doSpeciesInfo(self,nsp,best_of_each_species):
         nsp = dict(sorted(nsp.items()))
         running = 0
@@ -153,7 +153,7 @@ class Sim:
             nsp[sp][1] = running
             nsp[sp][2] = running+pop
             running += pop
-            
+
             info = self.species_info[sp]
             info.reps[3] = best_of_each_species[sp] # most-recent representative
             if pop > info.apex_pop: # This species reached its highest population
@@ -161,19 +161,19 @@ class Sim:
                 info.reps[2] = best_of_each_species[sp] # apex representative
             if pop >= self.c_count*self.S_NOTABLE and not info.prominent:  #prominent threshold
                 info.becomeProminent()
-                
+
     def checkALAP(self):
         if self.ui.ALAPButton.setting == 1: # We're already ALAP-ing!
             self.doGeneration(self.ui.doGenButton)
-        
+
     def doGeneration(self, button):
         generation_start_time = time.time() #calculates how long each generation takes to run
-        
+
         gen = len(self.creatures)-1
         creatureState = self.simulateImport(gen, 0, self.c_count, True)
         nodeCoor, muscles, _ = self.simulateRun(creatureState, self.trial_time, False)
         finalScores = nodeCoor[:,:,:,0].mean(axis=(1, 2)) # find each creature's average X-coordinate
-        
+
         # Tallying up all the data
         currRankings = np.flip(np.argsort(finalScores),axis=0)
         newPercentiles = np.zeros((self.HUNDRED+1))
@@ -183,7 +183,7 @@ class Sim:
             c = currRankings[rank]
             self.creatures[gen][c].fitness = finalScores[c]
             self.creatures[gen][c].rank = rank
-            
+
             species = self.creatures[gen][c].species
             if species in newSpeciesPops:
                 newSpeciesPops[species][0] += 1
@@ -197,7 +197,7 @@ class Sim:
             rank = min(int(self.c_count*p/self.HUNDRED),self.c_count-1)
             c = currRankings[rank]
             newPercentiles[p] = self.creatures[gen][c].fitness
-        
+
         currCreatures = self.creatures[-1]
         nextCreatures = [None]*self.c_count
         for rank in range(self.c_count//2):
@@ -214,32 +214,32 @@ class Sim:
                 nextCreatures[winner] = self.clone(self.creatures[gen][winner],(gen+1)*self.c_count+winner)
             nextCreatures[loser] = self.mutate(self.creatures[gen][winner],(gen+1)*self.c_count+loser)
             self.creatures[gen][loser].living = False
-        
+
         self.creatures.append(nextCreatures)
         self.rankings = np.append(self.rankings,currRankings.reshape((1,self.c_count)),axis=0)
         self.percentiles = np.append(self.percentiles,newPercentiles.reshape((1,self.HUNDRED+1)),axis=0)
         self.species_pops.append(newSpeciesPops)
-        
+
         drawAllGraphs(self, self.ui)
-        
+
         self.getCalmStates(gen+1,0,self.c_count,self.stabilization_time,True)
         #Calm the creatures down so no potential energy is stored
         for c in range(self.c_count):
             for i in range(2):
                 self.creatures[gen+1][c].icons[i] = self.creatures[gen+1][c].drawIcon(self.ui.ICON_DIM[i], self.ui.MOSAIC_COLOR, self.beat_fade_time)
-  
+
         self.ui.genSlider.val_max = gen+1
         self.ui.genSlider.manualUpdate(gen)
         self.last_gen_run_time = time.time()-generation_start_time
-        
+
         self.ui.detectMouseMotion()
-        
+
     def getCreatureWithID(self, ID):
         return self.creatures[ID//self.c_count][ID%self.c_count]
-        
+
     def clone(self, parent, newID):
         return Creature(parent.dna, newID, parent.species, self, self.ui)
-        
+
     def mutate(self, parent, newID):
         newDNA, newSpecies, cwc = parent.getMutatedDNA(self)
         newCreature = Creature(newDNA, newID, newSpecies, self, self.ui)
