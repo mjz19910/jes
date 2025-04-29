@@ -1,3 +1,4 @@
+import numpy as np
 from jes_sim import Sim
 from jes_ui import UI
 
@@ -11,7 +12,7 @@ def init():
 		_typical_friction_coef=0.8, _muscle_coef=0.08,
 		_traits_per_box=3, # desired width, desired height, rigidity
 		_traits_extra=1, # heartbeat (time)
-		_mutation_rate=0.07 * 8, _big_mutation_rate=0.025 * 12,
+		_mutation_rate=0.07 * 1, _big_mutation_rate=0.025 * 1,
 		_UNITS_PER_METER=0.05
 	)
 
@@ -33,8 +34,8 @@ def init():
 
 def ui_loop(ui):
 	prev_len = None
-	len_increment = 1000
-	target_len = len_increment
+	target_len = 0
+	sim = ui.sim
 	while ui.running:
 		ui.sim.checkALAP()
 		ui.detectMouseMotion()
@@ -43,10 +44,9 @@ def ui_loop(ui):
 		ui.doMovies()
 		ui.drawMenu()
 		ui.show()
-		if prev_len != len(ui.sim.creatures) and len(ui.sim.creatures) - 1 > target_len:
+		if prev_len != len(sim.creatures) and len(sim.creatures) - 1 > target_len:
 			ui.ALAPButton.setting = 0
-			target_len += len_increment
-		prev_len = len(ui.sim.creatures)
+			target_len += 1000
 
 def run_app():
 	ui = init()
