@@ -7,7 +7,7 @@ import random
 import bisect
 
 def drawAllGraphs(sim, ui):
-    drawLineGraph(sim.percentiles, ui.graph, [70,0,30,30], sim.UNITS_PER_METER, ui.smallFont)
+    drawLineGraph(sim.percentiles, ui.graph, [70 + 20,0,30,30], sim.UNITS_PER_METER, ui.smallFont)
     drawSAC(sim.species_pops, ui.sac, [70,0], ui)
     drawGeneGraph(sim.species_info, sim.prominent_species, ui.gene_graph, sim, ui, ui.tinyFont)
 

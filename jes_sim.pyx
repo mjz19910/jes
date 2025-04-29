@@ -37,7 +37,7 @@ class Sim:
         self.big_mutation_rate = _big_mutation_rate
 
         self.S_VISIBLE = 0.05 #what proportion of the population does a species need to appear on the SAC graph?
-        self.S_NOTABLE = 0.10 #what proportion of the population does a species need to appear in the genealogy?
+        self.S_NOTABLE = 0.70 #what proportion of the population does a species need to appear in the genealogy?
         self.HUNDRED = 100 # change this if you want to change the resolution of the percentile-tracking
         self.UNITS_PER_METER = _UNITS_PER_METER
         self.creatures = None
