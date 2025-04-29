@@ -1,94 +1,95 @@
-"""def getSpecies(self):
-        BOXES = CW*CH*BEATS_PER_CYCLE
-        TOTAL = TRAITS_PER_BOX*BOXES
-        dna_reshaped = np.zeros((TRAITS_PER_BOX,BOXES))
-        for t in range(TRAITS_PER_BOX):
-            for u in range(BOXES):
-                dna_reshaped[t][u] = self.dna[u*TRAITS_PER_BOX+t]
-        dna_up_down = np.zeros((TOTAL))
-        for t in range(TRAITS_PER_BOX):
-            for u in range(BOXES):
-                val = 1 if dna_reshaped[t][u] >= np.mean(dna_reshaped[t]) else 0
-                dna_up_down[t*BOXES+u] = val
+# """def getSpecies(self):
+#         BOXES = CW*CH*BEATS_PER_CYCLE
+#         TOTAL = TRAITS_PER_BOX*BOXES
+#         dna_reshaped = np.zeros((TRAITS_PER_BOX,BOXES))
+#         for t in range(TRAITS_PER_BOX):
+#             for u in range(BOXES):
+#                 dna_reshaped[t][u] = self.dna[u*TRAITS_PER_BOX+t]
+#         dna_up_down = np.zeros((TOTAL))
+#         for t in range(TRAITS_PER_BOX):
+#             for u in range(BOXES):
+#                 val = 1 if dna_reshaped[t][u] >= np.mean(dna_reshaped[t]) else 0
+#                 dna_up_down[t*BOXES+u] = val
         
-        pre_stri = DUDtoPRESTRI(dna_up_down[128:144], 16)  #I'm only taking rigidity on Frame 1 into account now.
-        self.dudly = pre_stri
-        _hex = sha256(pre_stri.encode('utf-8')).hexdigest()
-        return int(_hex, 16)%SPECIES_COUNT"""
-        
-        
+#         pre_stri = DUDtoPRESTRI(dna_up_down[128:144], 16)  #I'm only taking rigidity on Frame 1 into account now.
+#         self.dudly = pre_stri
+#         _hex = sha256(pre_stri.encode('utf-8')).hexdigest()
+#         return int(_hex, 16)%SPECIES_COUNT"""
         
         
-        """if data[g,s] >= 1 or (g >= 1 and data[g-1,s] >= 1):
-                y1a = H/2
-                y1b = H/2
-                y2a = np.sum(data[g,0:s])*FAC
-                y2b = np.sum(data[g,0:s+1])*FAC
-                if g >= 1:
-                    y1a = np.sum(data[g-1,0:s])*FAC
-                    y1b = np.sum(data[g-1,0:s+1])*FAC
+        
+        
+#         """if data[g,s] >= 1 or (g >= 1 and data[g-1,s] >= 1):
+#                 y1a = H/2
+#                 y1b = H/2
+#                 y2a = np.sum(data[g,0:s])*FAC
+#                 y2b = np.sum(data[g,0:s+1])*FAC
+#                 if g >= 1:
+#                     y1a = np.sum(data[g-1,0:s])*FAC
+#                     y1b = np.sum(data[g-1,0:s+1])*FAC
                 
-                pygame.draw.polygon(sac,speciesToColor(s),points)"""
+#                 pygame.draw.polygon(sac,speciesToColor(s),points)"""
                 
                 
                 
-"""
-for s in range(CREATURE_COUNT):
-            d = species_pops[a2,s]
-            if d >= CREATURE_COUNT*0.05:
-                speciesI = runningTotal+d*0.5
-                speciesY = 560+300*speciesI/CREATURE_COUNT
-                name = species_to_name(s)
-                color = speciesToColor(s)
-                alignText(screen, f"{name}: {int(d)}", 860+880*frac, speciesY, color, smallFont, 0.0, True)
-            runningTotal += d
-            """
+# """
+# for s in range(CREATURE_COUNT):
+#             d = species_pops[a2,s]
+#             if d >= CREATURE_COUNT*0.05:
+#                 speciesI = runningTotal+d*0.5
+#                 speciesY = 560+300*speciesI/CREATURE_COUNT
+#                 name = species_to_name(s)
+#                 color = speciesToColor(s)
+#                 alignText(screen, f"{name}: {int(d)}", 860+880*frac, speciesY, color, smallFont, 0.0, True)
+#             runningTotal += d
+#             """
             
             
             
             
-            """CREATURE_COUNT = 250
-SPECIES_COUNT = CREATURE_COUNT
-STABILIZATION_TIME = 200
-TRIAL_TIME = 300
-BEAT_TIME = 20
-BEAT_FADE_TIME = 5
-CW = 4
-CH = 4
-CREATURE_DIM = [CW,CH]
-BEATS_PER_CYCLE = 3
-NODE_COOR_COUNT = 4 
+#             """CREATURE_COUNT = 250
+# SPECIES_COUNT = CREATURE_COUNT
+# STABILIZATION_TIME = 200
+# TRIAL_TIME = 300
+# BEAT_TIME = 20
+# BEAT_FADE_TIME = 5
+# CW = 4
+# CH = 4
+# CREATURE_DIM = [CW,CH]
+# BEATS_PER_CYCLE = 3
+# NODE_COOR_COUNT = 4
 
-CEILING_Y = -10000000
-FLOOR_Y = 0
-GROUND_FRICTION_COEF = 25 # the higher the number, the more ground friction is applied.
+# CEILING_Y = -10000000
+# FLOOR_Y = 0
+# GROUND_FRICTION_COEF = 25 # the higher the number, the more ground friction is applied.
 
-GRAVITY_ACCELERATION_COEF = 0.002
-CALMING_FRICTION_COEF = 0.7
-TYPICAL_FRICTION_COEF = 0.8
-MUSCLE_COEF = 0.08
+# GRAVITY_ACCELERATION_COEF = 0.002
+# CALMING_FRICTION_COEF = 0.7
+# TYPICAL_FRICTION_COEF = 0.8
+# MUSCLE_COEF = 0.08
 
-TRAITS_PER_BOX = 3 
-TRAITS_EXTRA = 1 # heartbeat (time)
-TOTAL_TRAIT_COUNT = CW*CH*BEATS_PER_CYCLE*TRAITS_PER_BOX+TRAITS_EXTRA"""
-
-
-
-"""
-W_W = 1920
-W_H = 1078
-
-MOVIE_SINGLE_DIM = (650,650)
-GRAPH_DIM = (1000,500)
-graph = pygame.Surface(GRAPH_DIM, pygame.SRCALPHA, 32)
-SAC_DIM = (1000,300)
-sac = pygame.Surface(SAC_DIM, pygame.SRCALPHA, 32)
+# TRAITS_PER_BOX = 3
+# TRAITS_EXTRA = 1 # heartbeat (time)
+# TOTAL_TRAIT_COUNT = CW*CH*BEATS_PER_CYCLE*TRAITS_PER_BOX+TRAITS_EXTRA"""
 
 
-CREATURES_PER_ROW = 14
-CREATURES_PER_COLUMN = 8
-MENU_TEXT_UP = 180"""
 
+# """
+# W_W = 1920
+# W_H = 1078
+
+# MOVIE_SINGLE_DIM = (650,650)
+# GRAPH_DIM = (1000,500)
+# graph = pygame.Surface(GRAPH_DIM, pygame.SRCALPHA, 32)
+# SAC_DIM = (1000,300)
+# sac = pygame.Surface(SAC_DIM, pygame.SRCALPHA, 32)
+
+
+# CREATURES_PER_ROW = 14
+# CREATURES_PER_COLUMN = 8
+# MENU_TEXT_UP = 180"""
+
+import math
 
 def DUDtoPRESTRI(DUD, TOTAL):
     stri = ""
@@ -103,8 +104,7 @@ def DUDtoPRESTRI(DUD, TOTAL):
     return stri
     
     
-    
-BG_COLOR = (0,0,0)
+    BG_COLOR = (0,0,0)
     RED = (255,0,0)
     GREEN = (0,255,0)
     GRAYISH = (108,118,155)
@@ -164,8 +164,7 @@ BG_COLOR = (0,0,0)
     return recordHolder
     
     
-    
-p1 = p2 = q1 = q2 = i_start
+    p1 = p2 = q1 = q2 = i_start
     H = sac.get_height()
     while q1 < i_end:
         s = data[g1,q1]
@@ -179,8 +178,7 @@ p1 = p2 = q1 = q2 = i_start
         q1 = q2
         
         
-        
-p1 = p2 = 0
+    p1 = p2 = 0
     while p1 < sim.c_count:
         s = sim.species_pops[a2,p1]
         p2 = bisect.bisect(sim.species_pops[a2], s+0.5)
@@ -195,33 +193,33 @@ p1 = p2 = 0
         p1 = p2
         
         
-"""top_species = getTopSpecies(sim, a2)
-    pop = data[a2][top_species]
-    speciesI = (pop[1]+pop[2])/2
-    speciesY = 560+300*(1-speciesI/sim.c_count)
-    name = species_to_name(s)
-        color = speciesToColor(s)
-        OUTLINE = ui.WHITE if s == top_species else None
-        alignText(screen, f"{name}: {int(pop)}", lineX+10, speciesY, color, ui.smallFont, 0.0, [ui.BLACK,OUTLINE])
+# """top_species = getTopSpecies(sim, a2)
+#     pop = data[a2][top_species]
+#     speciesI = (pop[1]+pop[2])/2
+#     speciesY = 560+300*(1-speciesI/sim.c_count)
+#     name = species_to_name(s)
+#         color = speciesToColor(s)
+#         OUTLINE = ui.WHITE if s == top_species else None
+#         alignText(screen, f"{name}: {int(pop)}", lineX+10, speciesY, color, ui.smallFont, 0.0, [ui.BLACK,OUTLINE])
     
+#     p1 = p2 = 0
+#     while p1 < sim.c_count:
+#         s = sim.species_pops[a2,p1]
+#         p2 = bisect.bisect(sim.species_pops[a2], s+0.5)
+#         pop = p2-p1
+#         if pop >= sim.c_count*sim.S_VISIBLE:
+#             speciesI = (p1+p2)/2
+#             speciesY = 560+300*(1-speciesI/sim.c_count)
+#             name = species_to_name(s)
+#             color = speciesToColor(s)
+#             OUTLINE = ui.WHITE if s == top_species else None
+#             alignText(screen, f"{name}: {int(pop)}", lineX+10, speciesY, color, ui.smallFont, 0.0, [ui.BLACK,OUTLINE])
+#         p1 = p2"""
+        
+        
+        
+        
     p1 = p2 = 0
-    while p1 < sim.c_count:
-        s = sim.species_pops[a2,p1]
-        p2 = bisect.bisect(sim.species_pops[a2], s+0.5)
-        pop = p2-p1
-        if pop >= sim.c_count*sim.S_VISIBLE:
-            speciesI = (p1+p2)/2
-            speciesY = 560+300*(1-speciesI/sim.c_count)
-            name = species_to_name(s)
-            color = speciesToColor(s)
-            OUTLINE = ui.WHITE if s == top_species else None
-            alignText(screen, f"{name}: {int(pop)}", lineX+10, speciesY, color, ui.smallFont, 0.0, [ui.BLACK,OUTLINE])
-        p1 = p2"""
-        
-        
-        
-        p1 = p2 = 0
-    
     while p1 < sim.c_count:
         s = sim.species_pops[a2,p1]
         p2 = bisect.bisect(sim.species_pops[a2], s+0.5)

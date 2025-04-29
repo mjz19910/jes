@@ -8,6 +8,7 @@ import time
 import numpy as np
 import math
 import random
+import os
 
 class UI:
     def __init__(self, _W_W, _W_H, _MOVIE_SINGLE_DIM, _GRAPH_COOR, _SAC_COOR, _GENEALOGY_COOR,
@@ -15,9 +16,9 @@ class UI:
         self.sliderList = []
         self.buttonList = []
         pygame.font.init()
-        self.bigFont = pygame.font.Font('C:/Users/caryk/AppData/Local/Microsoft/Windows/Fonts/Jygquip 1.ttf', 60)
-        self.smallFont = pygame.font.Font('C:/Users/caryk/AppData/Local/Microsoft/Windows/Fonts/Jygquip 1.ttf', 30)
-        self.tinyFont = pygame.font.Font('C:/Users/caryk/AppData/Local/Microsoft/Windows/Fonts/Jygquip 1.ttf', 21)
+        self.bigFont = pygame.font.Font(os.environ["LOCALAPPDATA"] + '/Microsoft/Windows/Fonts/Interstate-regular.ttf', 60)
+        self.smallFont = pygame.font.Font(os.environ["LOCALAPPDATA"] + '/Microsoft/Windows/Fonts/Interstate-regular.ttf', 30)
+        self.tinyFont = pygame.font.Font(os.environ["LOCALAPPDATA"] + '/Microsoft/Windows/Fonts/Interstate-regular.ttf', 21)
         self.BACKGROUND_PIC = pygame.image.load("visuals/background.png")
         self.W_W = _W_W
         self.W_H = _W_H

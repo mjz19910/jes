@@ -21,7 +21,7 @@ class Sim:
         self.c_dim = _c_dim
         self.CW, self.CH = self.c_dim
         self.beats_per_cycle = _beats_per_cycle
-        self.node_coor_count = _node_coor_count 
+        self.node_coor_count = _node_coor_count
         self.y_clips = _y_clips
         self.ground_friction_coef = _ground_friction_coef
         self.gravity_acceleration_coef = _gravity_acceleration_coef
@@ -134,7 +134,7 @@ class Sim:
             
             if not calmingRun:    # dealing with collision with the ground.
                 nodesTouchingGround = np.ma.masked_where(nodeCoor[:,:,:,1] >= FLOOR_Y, nodeCoor[:,:,:,1])
-                m = nodesTouchingGround.mask.astype(float) # mask that only countains 1's where nodes touch the floor
+                m = nodesTouchingGround.mask.astype(float) # mask that only contains 1's where nodes touch the floor
                 pressure = nodeCoor[:,:,:,1]-FLOOR_Y
                 groundFrictionMultiplier = 0.5**(m*pressure*self.ground_friction_coef)
                 
@@ -143,7 +143,7 @@ class Sim:
         
         if calmingRun: # If it's a calming run, then take the average location of all nodes to center it at the origin.
             nodeCoor[:,:,:,0] -= np.mean(nodeCoor[:,:,:,0], axis=(1,2), keepdims=True)
-        return nodeCoor, muscles, startCurrentFrame+frameCount  
+        return nodeCoor, muscles, startCurrentFrame+frameCount
         
     def doSpeciesInfo(self,nsp,best_of_each_species):
         nsp = dict(sorted(nsp.items()))
