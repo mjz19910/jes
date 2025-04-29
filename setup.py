@@ -12,6 +12,7 @@ extensions = [
     Extension("jes_shapes", ["jes_shapes.pyx"]),
     Extension("jes_slider", ["jes_slider.pyx"]),
     Extension("jes_button", ["jes_button.pyx"]),
+    Extension("utils", ["utils.pyx"]),
 ]
 
 setup(

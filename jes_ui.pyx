@@ -293,7 +293,7 @@ class UI:
             pygame.draw.rect(screen,col,(x,y,R,R))
         
     def drawMenuText(self):
-        y = self.W_H-self.MENU_TEXT_UP
+        cdef int y = self.W_H-self.MENU_TEXT_UP
         titleSurface = self.bigFont.render("Jelly Evolution Simulator", False, self.GRAYISH)
         self.screen.blit(titleSurface,(40,20))
         a = str(self.genSlider.val)
@@ -310,6 +310,8 @@ class UI:
         
     def drawPreviews(self):
         cdef int gen = self.genSlider.val
+        cdef int r_i
+        cdef int index
         if gen >= 0 and gen < len(self.sim.rankings):
             names = ["Best","Median","Worst"]
             for r in range(3):
@@ -321,9 +323,7 @@ class UI:
                 centerText(preview, f"{names[r]} creature", DIM[0]/2, DIM[1]-20, self.WHITE, self.smallFont)
                 alignText(preview, dist_to_text(creature.fitness, True,self.sim.UNITS_PER_METER), 10, 20, self.WHITE, self.smallFont, 0.0,None)
                 self.screen.blit(preview,(self.previewLocations[r][0],self.previewLocations[r][1]))
-            
-            
-        
+
     def doMovies(self):
         L = len(self.visualSimMemory)
         MSCALE = [1, 1, 0.5, 0.70]  # movie screen scale
@@ -336,14 +336,14 @@ class UI:
                 self.visualSimMemory[i] = self.sim.simulateRun(self.visualSimMemory[i], 1, False)
             DIM = arrayIntMultiply(self.MOVIE_SINGLE_DIM, MSCALE[self.CLH[0]])
             self.movieScreens[i] = pygame.Surface(DIM, pygame.SRCALPHA, 32)
-        
+
             nodeArr, _, currentFrame = self.visualSimMemory[i]
             s = DIM[0]/(self.sim.CW+2)*0.5 # visual transform scale
-        
+
             averageX = np.mean(nodeArr[:,:,:,0])
             transform = [DIM[0]/2-averageX*s,DIM[1]*0.8,s]
             self.creatureHighlight[i].drawCreature(self.movieScreens[i],nodeArr[0],currentFrame,transform,True,(i == 0))
-                
+
     def getHighlightedSpecies(self):
         gen = self.genSlider.val
         if self.CLH[0] == 2:
@@ -382,8 +382,6 @@ class UI:
                     self.showCreaturesButton.timeOfLastClick = time.time()
                     self.showCreaturesButton.setting = 1-self.showCreaturesButton.setting
                     self.toggleCreatures(self.showCreaturesButton)
-                
-                    
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouseX, mouseY = pygame.mouse.get_pos()
                 for slider in self.sliderList:
@@ -411,16 +409,17 @@ class UI:
 
     def displayCreatureMosaic(self, screen):
         timeSinceLastPress = time.time()-self.showCreaturesButton.timeOfLastClick
-        PAN_TIME = 0.2
+        cdef double PAN_TIME = 0.2
         frac = bound(timeSinceLastPress/PAN_TIME)
-        panelY = 0
+        cdef double panelY = 0
         if self.mosaicVisible:
             panelY = self.CM_MARGIN1-self.mosaicScreen.get_height()*(1-frac)
             screen.blit(self.mosaicScreen,(self.CM_MARGIN1,panelY))
         if not self.mosaicVisible and frac < 1:
             self.screen.blit(self.mosaicScreen,(self.CM_MARGIN1,self.CM_MARGIN1-self.mosaicScreen.get_height()*frac))
-    
+
     def displayMovies(self, screen):
+        cdef int LMS
         if self.CLH[0] == None:
             return
         if self.CLH[0] == 3:
@@ -433,13 +432,15 @@ class UI:
                 species_colors[i] = speciesToColor(sp, self)
             self.drawMovieGrid(screen, (0,0), [True]*LMS, species_names, species_colors, self.smallFont)
             return
-        gen = self.genSlider.val
+        cdef int gen = self.genSlider.val
         coor = (self.CM_MARGIN1+self.MS_WC,0)
         self.screen.blit(self.infoBarScreen,coor)
         if self.CLH[0] == 2:
             self.drawMovieQuad(self.CLH[1])
             return
         self.screen.blit(self.movieScreens[0],coor)
+        cdef int x
+        cdef int y
         if self.CLH[0] == 1:
             DIM = self.previewLocations[self.CLH[2]]
             self.screen.blit(drawRingLight(DIM[2],DIM[3],6),(DIM[0],DIM[1]))
@@ -448,52 +449,49 @@ class UI:
             x = coor[0]+self.CM_MARGIN1
             y = coor[1]+self.CM_MARGIN1
             self.screen.blit(drawRingLight(coor[2],coor[3],6),(x,y))
-            
-                    
-        
 
     def detectSliders(self):
         if self.sliderDrag is not None:
             mouseX, mouseY = pygame.mouse.get_pos()
             s_x, s_y, s_w, s_h, s_dw = self.sliderDrag.dim
             ratio = bound(((mouseX-s_dw*0.5)-s_x)/(s_w-s_dw))
-            
+
             s_range = self.sliderDrag.val_max - self.sliderDrag.val_min
             self.sliderDrag.tval = ratio*s_range+self.sliderDrag.val_min
             if self.sliderDrag.snap_to_int:
                 self.sliderDrag.tval = round(self.sliderDrag.tval)
             if self.sliderDrag.update_live:
                 self.sliderDrag.updateVal()
-       
+
     def drawSlidersAndButtons(self):
         for slider in self.sliderList:
             slider.drawSlider(self.screen)
         for button in self.buttonList:
-            button.drawButton(self.screen, self.smallFont)  
-       
+            button.drawButton(self.screen, self.smallFont)
+
     # Button and slider functions
     def updateGenSlider(self, gen):
         self.drawCreatureMosaic(gen)
-        
+
     def toggleCreatures(self, button):
         self.mosaicVisible = (button.setting == 1)
-        
+
     def toggleSort(self, button):
         self.drawCreatureMosaic(self.genSlider.val)
-        
+
     def toggleStyle(self, button):
         self.drawCreatureMosaic(self.genSlider.val)
-    
+
     def doNothing(self, button):
-        a = 5
-        
+        cdef int a = 5
+
     def startSample(self, button):
         if button.setting == 1:
             self.sample_i = 0
             self.startSampleHelper()
-        
+
     def startSampleHelper(self):
-        L = 8
+        cdef int L = 8
         self.creatureHighlight = []
         self.visualSimMemory = []
         self.movieScreens = []
@@ -506,6 +504,6 @@ class UI:
             self.visualSimMemory.append(self.sim.simulateImport(gen,c,c+1,True))
             self.movieScreens.append(None)
         self.sample_i += L
-        
+
     def show(self):
         pygame.display.flip()
